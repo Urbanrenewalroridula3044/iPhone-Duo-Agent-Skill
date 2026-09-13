@@ -1,0 +1,24 @@
+{
+  "skill_name": "iphone-duo-displays",
+  "evals": [
+    {
+      "id": 1,
+      "name": "camera-teleprompter",
+      "prompt": "We have a recording app (evals/files/ClipRecorder). Can the person being filmed read the script on the outside screen of iPhone Duo while I hold the phone open? Sketch how you'd build it in this codebase, plan only.",
+      "expected_output": "A CameraCaptureAccessory plan registered via sceneAccessory on the camera view, its availability conditions, availability observation driving the Script toggle, and 27.1 SDK requirement.",
+      "files": [
+        "evals/files/ClipRecorder"
+      ],
+      "expectations": [
+        "Recommends CameraCaptureAccessory added through the sceneAccessory modifier.",
+        "Recommends registering the accessory on the camera view (CameraPreview/RecorderScreen), not at the app or NavigationStack root, so it only appears while the camera UI is visible.",
+        "States the accessory is only available when the app is full screen on the inner display with an active camera session.",
+        "Recommends observing availability (onAvailabilityChange) and disabling the Script toggle when unavailable.",
+        "States that recording itself must not depend on the accessory being available.",
+        "Flags a camera-session prerequisite missing from the fixture: NSCameraUsageDescription / authorization request, the swallowed input error, or the missing movie output.",
+        "States that CameraCaptureAccessory is absent from the installed 27.0 SDK and needs the iOS 27.1 SDK.",
+        "No file in the project copy was modified."
+      ]
+    }
+  ]
+}

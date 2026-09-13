@@ -1,0 +1,4 @@
+// Trimmed fixture: build settings relevant to the eval only.
+IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+INFOPLIST_FILE = LegacyNotes/Info.plist;
+TARGETED_DEVICE_FAMILY = 1;

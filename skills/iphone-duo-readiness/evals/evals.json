@@ -1,0 +1,44 @@
+{
+  "skill_name": "iphone-duo-readiness",
+  "evals": [
+    {
+      "id": 1,
+      "name": "full-readiness-plan",
+      "prompt": "I'm on the LegacyNotes team (UIKit app, project is in evals/files/LegacyNotes). We need it ready for iPhone Duo. Go through the project and tell me what to change and in what order.",
+      "expected_output": "A read-only, tiered plan with stable item IDs and session citations that puts scene lifecycle first, covers the legacy screen/idiom/orientation code, the standalone toolbar and the asymmetric inset math, and asks which items to apply.",
+      "files": [
+        "evals/files/LegacyNotes"
+      ],
+      "expectations": [
+        "The response identifies the missing UIScene lifecycle (AppDelegate-only window) as the first/blocking item and says the app will not launch when built with the latest SDK.",
+        "The response flags UIScreen.main.bounds / UIScreen.main.scale in LayoutHelpers or AppDelegate and names a replacement (view bounds, effective geometry, or traitCollection.displayScale).",
+        "The response flags the userInterfaceIdiom and UIDevice orientation checks as layout decisions and proposes size classes or container size instead.",
+        "The response flags the standalone UIToolbar in EditorViewController as not participating in iPhone Duo vertical bars and proposes moving items into the navigation controller's toolbar.",
+        "The response flags the symmetric safe-area arithmetic (inset * 2) in EditorViewController as wrong for asymmetric insets.",
+        "The response flags the custom ellipsis.circle bar item as conflicting with the system overflow menu (or proposes ToolbarOverflowMenu/additionalOverflowItems).",
+        "Recommendations carry stable item IDs, and the scene-lifecycle item cites WWDC26 'Modernize your UIKit app' (278) at 2:10 or the main-screen item cites 111461 3:57 / 278 2:51.",
+        "The response reports the installed Xcode/SDK version (27.0) and separates items that compile on it from items blocked on the iOS 27.1 SDK.",
+        "Upgrading to Xcode 27.1 is not sequenced as a prerequisite step before the fixes that work with the installed SDK (scene lifecycle, UIScreen.main, idiom/orientation, safe-area math).",
+        "No Swift or plist file in the project copy was modified (changes.diff is empty).",
+        "The response asks the developer which specific item IDs to apply."
+      ]
+    },
+    {
+      "id": 2,
+      "name": "missing-27-1-sdk",
+      "prompt": "In evals/files/PodcastPlayer, turn the player + queue HStack into an ArrangementView and give the queue toggle a horizontal-only axisBehavior so it stays put on iPhone Duo. Just do it, I'm using the Xcode that's installed on this Mac.",
+      "expected_output": "The agent checks the installed SDK, finds ArrangementView and axisBehavior absent, does not write code that cannot compile, explains why #available does not help, and offers work that compiles today.",
+      "files": [
+        "evals/files/PodcastPlayer"
+      ],
+      "expectations": [
+        "The agent verified against the installed SDK (ran sdk_api_check.py, grepped the SDK, or compiled a probe) and reports Xcode/SDK 27.0.",
+        "The response states that ArrangementView and axisBehavior are not declared in the installed SDK and require the iOS 27.1 SDK.",
+        "No file in the project copy contains ArrangementView or axisBehavior after the run.",
+        "The response explains that an #available check cannot make an undeclared symbol compile.",
+        "The response does not propose shipping guessed 27.1 API calls behind a compile-time guard (#if compiler, #if canImport, custom flag).",
+        "The response offers or applies at least one concrete change that compiles today (e.g. size-class driven layout for the player/queue, titles/symbols on bar items, visibilityPriority)."
+      ]
+    }
+  ]
+}

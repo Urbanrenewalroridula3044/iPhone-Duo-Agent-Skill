@@ -1,0 +1,82 @@
+[
+  {
+    "query": "we got the iPhone Duo dev kit news and PM wants a list of what breaks in our app (UIKit + some SwiftUI screens, ~200 files in ./Sources). can you audit it and give me a prioritized plan before anyone touches code?",
+    "should_trigger": true
+  },
+  {
+    "query": "is our app ready for the foldable iPhone? repo is ~/work/tripplanner-ios, still on Xcode 27.0 if that matters",
+    "should_trigger": true
+  },
+  {
+    "query": "Prepare the Recipes app for iPhone Duo \u2014 go through Apple's 'Prepare your app for iPhone Duo' guidance and tell me what applies to us and in what order.",
+    "should_trigger": true
+  },
+  {
+    "query": "before we submit the 27.1 update i want a readiness pass for iPhone Duo: bars, layouts around the hinge, multitasking, the works. plan first please",
+    "should_trigger": true
+  },
+  {
+    "query": "How should QA test our banking app across iPhone Duo poses (closed, open, book, tabletop) in Device Hub? Also tell me which of our screens are likely to have problems",
+    "should_trigger": true
+  },
+  {
+    "query": "our designers say the inner display of the Duo shows our app as a narrow phone column with huge empty sides. figure out why across the codebase and what we need to fix",
+    "should_trigger": true
+  },
+  {
+    "query": "Rebuilt with iOS 27.1 SDK and on the Duo simulator our toolbars moved to the side, some buttons disappeared into overflow and the layout looks off in Split View. Where do we even start?",
+    "should_trigger": true
+  },
+  {
+    "query": "make a plan to adopt iPhone Duo features in our podcast app \u2014 I don't want code changes yet, just what's worth doing and what needs 27.1",
+    "should_trigger": true
+  },
+  {
+    "query": "can you check if our Tuist-generated app has anything that'd break on iPhone Duo or in iPhone Mirroring resizing? we still have an AppDelegate window I think",
+    "should_trigger": true
+  },
+  {
+    "query": "Give me an iPhone Duo migration checklist for this repo with effort estimates per screen",
+    "should_trigger": true
+  },
+  {
+    "query": "my SwiftUI List jumps to the top every time I pop back from the detail view, NavigationStack with a path binding, iOS 27. how do i keep the scroll position",
+    "should_trigger": false
+  },
+  {
+    "query": "Android team asked whether Jetpack WindowManager FoldingFeature has an iOS equivalent\u2026 for now just help me wire up WindowInfoTracker in our Kotlin MainActivity",
+    "should_trigger": false
+  },
+  {
+    "query": "Xcode 27 beta keeps eating disk, DerivedData is 60GB and there are 4 simulator runtimes. what can i safely delete",
+    "should_trigger": false
+  },
+  {
+    "query": "Our iPad app crashes on launch in Stage Manager with 'UIScene configuration not found' \u2014 here's the Info.plist, what's wrong",
+    "should_trigger": false
+  },
+  {
+    "query": "write a swift-testing suite for our DateFormatter helpers, they're in Sources/Formatting",
+    "should_trigger": false
+  },
+  {
+    "query": "How do I adopt Liquid Glass buttons in SwiftUI on iOS 26? our custom capsule buttons look out of place",
+    "should_trigger": false
+  },
+  {
+    "query": "App Store Connect rejected our screenshots for the 6.9\" display, what sizes do they want now",
+    "should_trigger": false
+  },
+  {
+    "query": "set up a fastlane lane that uploads to TestFlight and posts to Slack",
+    "should_trigger": false
+  },
+  {
+    "query": "Convert this UIKit settings screen to SwiftUI Form, keep the same sections",
+    "should_trigger": false
+  },
+  {
+    "query": "our widget timeline stops refreshing after a day on iOS 27, WidgetKit reload budget?",
+    "should_trigger": false
+  }
+]

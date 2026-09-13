@@ -1,0 +1,837 @@
+{
+  "metadata": {
+    "skill_name": "iphone-duo-skills",
+    "skill_path": "/Users/ak/Developer/iPhone-Duo-Agent-Skill/skills",
+    "executor_model": "claude-opus-5",
+    "analyzer_model": "<model-name>",
+    "timestamp": "2026-09-13T04:22:05Z",
+    "evals_run": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6
+    ],
+    "runs_per_configuration": 1
+  },
+  "runs": [
+    {
+      "eval_id": 1,
+      "configuration": "with_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 1.0,
+        "passed": 11,
+        "failed": 0,
+        "total": 11,
+        "time_seconds": 391.5,
+        "tokens": 95749,
+        "tool_calls": 0,
+        "errors": 0
+      },
+      "expectations": [
+        {
+          "text": "The response identifies the missing UIScene lifecycle (AppDelegate-only window) as the first/blocking item and says the app will not launch when built with the latest SDK.",
+          "passed": true,
+          "evidence": "Summary: 'One thing blocks everything else. LegacyNotes has no scene lifecycle, and apps without one no longer launch when built with the latest SDK. That fix comes first (DUO-01)'. DUO-01 is under 'Tier 0: Blockers' and cites DUO005:AppDelegate.swift:4."
+        },
+        {
+          "text": "The response flags UIScreen.main.bounds / UIScreen.main.scale in LayoutHelpers or AppDelegate and names a replacement (view bounds, effective geometry, or traitCollection.displayScale).",
+          "passed": true,
+          "evidence": "DUO-01 flags AppDelegate.swift:9 UIWindow(frame: UIScreen.main.bounds) -> UIWindow(windowScene:). DUO-04 flags LayoutHelpers.swift:9 UIScreen.main.bounds.width -> 'Callers pass view.bounds.width'. DUO-05 flags LayoutHelpers.swift:13 1 / UIScreen.main.scale -> '1 / max(traits.displayScale, 1)'. Line numbers match the fixture."
+        },
+        {
+          "text": "The response flags the userInterfaceIdiom and UIDevice orientation checks as layout decisions and proposes size classes or container size instead.",
+          "passed": true,
+          "evidence": "DUO-02: UIDevice.current.orientation.isLandscape row height -> 'traitCollection.verticalSizeClass == .compact ? 44 : 64' (with view.bounds aspect alternative). DUO-04: userInterfaceIdiom == .pad -> 'traits.horizontalSizeClass == .regular ? min(600, availableWidth) : availableWidth * 0.9'."
+        },
+        {
+          "text": "The response flags the standalone UIToolbar in EditorViewController as not participating in iPhone Duo vertical bars and proposes moving items into the navigation controller's toolbar.",
+          "passed": true,
+          "evidence": "DUO-06: 'The system ignores standalone toolbars when it moves bars to the side' ; Change: delete toolbar, 'Set toolbarItems = [bold, italic, .flexibleSpace()]', 'navigationController?.setToolbarHidden(false, animated:)'."
+        },
+        {
+          "text": "The response flags the symmetric safe-area arithmetic (inset * 2) in EditorViewController as wrong for asymmetric insets.",
+          "passed": true,
+          "evidence": "DUO-03 quotes 'let width = view.bounds.width - inset * 2' with inset = safeAreaInsets.left and says 'safe areas are often uneven on the inner display and in Split View. Doubling the left inset clips the text view...'; proposes view.bounds.inset(by: view.safeAreaInsets)."
+        },
+        {
+          "text": "The response flags the custom ellipsis.circle bar item as conflicting with the system overflow menu (or proposes ToolbarOverflowMenu/additionalOverflowItems).",
+          "passed": true,
+          "evidence": "DUO-07: 'the ellipsis belongs to the system overflow menu... a second \"\u2026\" next to the system's is confusing'; option (a) 'navigationItem.additionalOverflowItems = UIDeferredMenuElement.uncached {...}'. Header check confirms additionalOverflowItems is UIDeferredMenuElement, API_AVAILABLE(ios(16.0))."
+        },
+        {
+          "text": "Recommendations carry stable item IDs, and the scene-lifecycle item cites WWDC26 'Modernize your UIKit app' (278) at 2:10 or the main-screen item cites 111461 3:57 / 278 2:51.",
+          "passed": true,
+          "evidence": "IDs DUO-01..DUO-10. DUO-01: 'Source: Modernize your UIKit app (WWDC26 278) 2:10'. DUO-04 also cites 111461 3:57 and DUO-05 cites 278 2:51."
+        },
+        {
+          "text": "The response reports the installed Xcode/SDK version (27.0) and separates items that compile on it from items blocked on the iOS 27.1 SDK.",
+          "passed": true,
+          "evidence": "Header: 'Toolchain: Xcode 27.0 (27A5252f), iOS 27.0 SDK'. Each item has an 'SDK:' line; 'Every item below compiles with the Xcode 27.0 you have today.' 'Blocked' section: 'No proposed code is blocked' and 'Blocked on Xcode 27.1: seeing the side-mounted bars, and the iPhone Duo simulator'; 27.1-only APIs (axisBehavior, compression, opt-out, reserved regions, arrangements, camera accessory) listed separately as not needed. Consistent with ground truth that these are absent in the 27.0 SDK."
+        },
+        {
+          "text": "Upgrading to Xcode 27.1 is not sequenced as a prerequisite step before the fixes that work with the installed SDK (scene lifecycle, UIScreen.main, idiom/orientation, safe-area math).",
+          "passed": true,
+          "evidence": "'Order of work': Tier 0 DUO-01, Tier 1 DUO-02..05, Tier 2 DUO-06..08, Tier 3 optional, and only step 5 'With Xcode 27.1: rebuild, then run the pose checks'. 'None of them needs to wait for 27.1.'"
+        },
+        {
+          "text": "No Swift or plist file in the project copy was modified (changes.diff is empty).",
+          "passed": true,
+          "evidence": "outputs/changes.diff is 0 bytes; grader ran diff -r against the LegacyNotes fixture: exit 0, no differences, no extra files in project/."
+        },
+        {
+          "text": "The response asks the developer which specific item IDs to apply.",
+          "passed": true,
+          "evidence": "Status line: 'Tell me which IDs to apply.' and 'What I need from you' item 1: 'Which IDs to apply. For example, \"DUO-01\" first, or \"Tier 0 and Tier 1\".'"
+        }
+      ],
+      "notes": [
+        "Intent of 44 pt rows (short height vs wider-than-tall) is unknown; asked as a question.",
+        "LaunchScreen.storyboard missing in the fixture; may be a trimming artifact.",
+        "No build possible: project.pbxproj is trimmed; verification was typecheck-only on a scratch copy.",
+        "DUO-07 is blocked on what the ellipsis button should do.",
+        "DUO-08 visibly replaces the word 'New' with a compose icon.",
+        "Pose checks P1-P12 not run; no iPhone Duo simulator in Xcode 27.0.",
+        "SKILL told the executor to write scan JSON to $TMPDIR, which conflicted with the run rule; temp dir was deleted and later scratch work kept inside run-1."
+      ],
+      "eval_name": "full-readiness-plan"
+    },
+    {
+      "eval_id": 2,
+      "configuration": "with_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 1.0,
+        "passed": 6,
+        "failed": 0,
+        "total": 6,
+        "time_seconds": 167.0,
+        "tokens": 55855,
+        "tool_calls": 0,
+        "errors": 0
+      },
+      "expectations": [
+        {
+          "text": "The agent verified against the installed SDK (ran sdk_api_check.py, grepped the SDK, or compiled a probe) and reports Xcode/SDK 27.0.",
+          "passed": true,
+          "evidence": "Verified: transcript steps 5 and 10 show `xcodebuild -version` (Xcode 27.0, 27A5252f), `xcrun --show-sdk-version` 27.0, and `sdk_api_check.py --symbol ArrangementView --symbol axisBehavior` reporting both not in SDK. Steps 13-14 add typecheck probes in scratch copies. response.md line 3: 'Xcode 27.0 (27A5252f) ... with the iOS 27.0 SDK'."
+        },
+        {
+          "text": "The response states that ArrangementView and axisBehavior are not declared in the installed SDK and require the iOS 27.1 SDK.",
+          "passed": true,
+          "evidence": "response.md line 3: '`ArrangementView` and `axisBehavior` both arrive in the **iOS 27.1 SDK** (Xcode 27.1)'. Line 7: '`ArrangementView`, `arrangementViewStyle` and `axisBehavior` are all missing from it', with the compiler errors quoted. DUO-01/DUO-02 are marked 'blocked on iOS 27.1 SDK'."
+        },
+        {
+          "text": "No file in the project copy contains ArrangementView or axisBehavior after the run.",
+          "passed": true,
+          "evidence": "`grep -rn 'ArrangementView\\|axisBehavior'` over R/project returned no matches. `diff -r` against the PodcastPlayer fixture showed no differences, and changes.diff is 0 bytes."
+        },
+        {
+          "text": "The response explains that an #available check cannot make an undeclared symbol compile.",
+          "passed": true,
+          "evidence": "response.md line 14: 'Wrapping the calls in `if #available(iOS 27.1, *)` won't help: that check needs the symbol to exist in the SDK, and here it doesn't.'"
+        },
+        {
+          "text": "The response does not propose shipping guessed 27.1 API calls behind a compile-time guard (#if compiler, #if canImport, custom flag).",
+          "passed": true,
+          "evidence": "There is no #if compiler, #if canImport or custom-flag proposal. Transcript step 15 rejects those guards. DUO-02 mentions an `if #available(iOS 27.1, *)` helper only for use after Xcode 27.1 is installed and the deployment target is below 27.1. That is a runtime availability check on a real SDK, not a compile-time guard around guessed calls."
+        },
+        {
+          "text": "The response offers or applies at least one concrete change that compiles today (e.g. size-class driven layout for the player/queue, titles/symbols on bar items, visibilityPriority).",
+          "passed": true,
+          "evidence": "DUO-03 offers a concrete `AnyLayout` HStack/VStack switch driven by `horizontalSizeClass`, with a code snippet. Transcript step 16 says it was typechecked against the iOS 27.0 simulator SDK (exit 0). It was offered but not applied, with a stated reason: it changes layout on all compact iPhones. The response also notes that the text-only toggle already stays horizontal today."
+        }
+      ],
+      "notes": [
+        "Behaviour of an ArrangementView secondary that becomes empty when the queue is hidden is flagged as not verified.",
+        "No iPhone Duo simulator, so poses were not run.",
+        "Whether to apply the DUO-03 size-class stopgap, and the app's deployment target.",
+        "Typecheck with swiftc instead of xcodebuild, because there is no Xcode project."
+      ],
+      "eval_name": "missing-27-1-sdk"
+    },
+    {
+      "eval_id": 3,
+      "configuration": "with_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 1.0,
+        "passed": 7,
+        "failed": 0,
+        "total": 7,
+        "time_seconds": 398.9,
+        "tokens": 60936,
+        "tool_calls": 0,
+        "errors": 0
+      },
+      "expectations": [
+        {
+          "text": "GalleryGrid no longer uses UIDevice.current.orientation or UIScreen.main; columns/size come from size classes or container geometry.",
+          "passed": true,
+          "evidence": "project/Sources/GalleryGrid.swift has no UIDevice or UIScreen references (import UIKit removed). Columns come from @Environment horizontalSizeClass/verticalSizeClass (line 12); cell height is 'width / CGFloat(columns)' where width is set by '.onGeometryChange(for: CGFloat.self) { $0.size.width }' (line 24)."
+        },
+        {
+          "text": "GalleryGrid keeps 2 columns in iPhone portrait and 4 in iPhone landscape (no formula that can yield 3 on a small landscape iPhone).",
+          "passed": true,
+          "evidence": "Formula: 'horizontalSizeClass == .regular || verticalSizeClass == .compact ? 4 : 2' can only produce 2 or 4. iPhone portrait (any model incl. Pro Max): compact width, regular height -> false || false -> 2. Non-Max iPhone landscape: compact width, compact height -> 4. Pro Max landscape: regular width, compact height -> 4. Small landscape iPhone -> compact height -> 4. The response explicitly notes horizontal size class alone would give 2 on a landscape 17 Pro, which is why the OR is there."
+        },
+        {
+          "text": "DockBleedModifier still distinguishes landscapeLeft from landscapeRight (not replaced with width > height or a size class).",
+          "passed": true,
+          "evidence": "DockBleedModifier.swift lines 23-27 unchanged: 'switch interfaceOrientation { case .landscapeLeft: ... case .landscapeRight: ... default: (0, 0) }'."
+        },
+        {
+          "text": "DockBleedModifier is not restructured (no new UIViewRepresentable, KVO/observer or new data flow added); at most the deprecated scene.interfaceOrientation call is swapped for effectiveGeometry.interfaceOrientation.",
+          "passed": true,
+          "evidence": "diff -r against the FloatingDock fixture shows exactly one changed line in DockBleedModifier.swift: '.interfaceOrientation ?? .portrait' -> '.effectiveGeometry.interfaceOrientation ?? .portrait'. The connectedScenes.first issue (DUO009) was raised as a question rather than fixed with a bridge/observer."
+        },
+        {
+          "text": "The response explains that DockBleedModifier answers a physical question (which end has the cutout) that size classes cannot, referencing the code comment or AGENTS.md.",
+          "passed": true,
+          "evidence": "Opening: 'I kept that modifier's orientation read, because AGENTS.md and its doc comment both say it is deliberate.' DUO-03: 'It works out which end of a landscape iPhone has the Dynamic Island, and geometry can't tell you that because the left and right safe-area insets are equal. AGENTS.md says not to replace it'. It says 'geometry' rather than literally 'size classes', but AGENTS.md (which it cites) forbids size classes/aspect ratio, and size classes are symmetric by construction, so the substance is present."
+        },
+        {
+          "text": "The edited Swift files typecheck: the transcript shows swiftc -typecheck or a build succeeding after the edits.",
+          "passed": true,
+          "evidence": "Transcript step 18 (after edits in step 17): 'Ran xcrun --sdk iphonesimulator swiftc -typecheck on both edited files at arm64-apple-ios16.0-simulator and arm64-apple-ios27.0-simulator -> exit 0, no warnings.' Supporting evidence: grader ran 'xcrun --sdk iphonesimulator swiftc -typecheck -target arm64-apple-ios18.0-simulator project/Sources/*.swift' -> rc=0, no output."
+        },
+        {
+          "text": "The replacement for the main-screen/orientation layout cites 111461 2:46 or 3:57, or WWDC26 278 2:51 or 6:50.",
+          "passed": true,
+          "evidence": "DUO-01 (orientation -> size classes): '(Tech Talk 111461 2:46; WWDC26 278 6:50)'. DUO-02 (UIScreen.main -> own width): '(111461 3:57; 278 5:19)'."
+        }
+      ],
+      "notes": [
+        "connectedScenes.first may pick the scene on the other display on iPhone Duo (DUO009); left unfixed to avoid restructuring the documented exception, raised as a question.",
+        "Where the inner display's cutout is and what effectiveGeometry.interfaceOrientation reports there is unverified.",
+        "No full build (no Xcode project/package) and no simulator run; no iPhone Duo simulator in Xcode 27.0.",
+        "Process issue: executor ran `xcrun agent skills export` without --output-dir and left an xcode-skills/ folder inside the plugin (skills/iphone-duo-adaptivity-audit); its rm/mv attempts were denied. The folder has since been removed by the user/harness.",
+        "iPad portrait now shows 4 columns instead of 2.",
+        "duo_scan.py has no suppression mechanism, so the kept DockBleedModifier will keep being flagged.",
+        "Could not clean up the accidental export; reported the rm -rf command to the user instead."
+      ],
+      "eval_name": "documented-orientation-exception"
+    },
+    {
+      "eval_id": 4,
+      "configuration": "with_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 1.0,
+        "passed": 8,
+        "failed": 0,
+        "total": 8,
+        "time_seconds": 179.3,
+        "tokens": 53140,
+        "tool_calls": 0,
+        "errors": 0
+      },
+      "expectations": [
+        {
+          "text": "Recommends keeping the Select/Done button horizontal (axisBehavior .horizontalOnly) because it switches between text labels.",
+          "passed": true,
+          "evidence": "DUO-01 (response.md lines 27-46): 'the item swaps between two words ... The talk's fix for Select <-> Done is to keep it horizontal and keep related items on the same axis.' With 27.1 it adds `.axisBehavior(.horizontalOnly)` on the ToolbarItem."
+        },
+        {
+          "text": "Recommends replacing the envelope + '12 new' text with a symbol carrying a badge.",
+          "passed": true,
+          "evidence": "DUO-02: replaces `HStack { Image(systemName: \"envelope\"); Text(\"\\(unreadCount) new\") }` with `Button(\"Unread\", systemImage: \"envelope\").badge(unreadCount)`."
+        },
+        {
+          "text": "Reserves the ellipsis symbol for the system overflow: the custom ellipsis filter Menu is either moved into ToolbarOverflowMenu or given its own filter symbol and title.",
+          "passed": true,
+          "evidence": "DUO-03: 'The ellipsis menu is a Filter, so give it its own symbol and title', using `Menu(\"Filter\", systemImage: \"line.3.horizontal.decrease\")`. It says the ellipsis is reserved for the system overflow and that unrelated actions belong in `ToolbarOverflowMenu`."
+        },
+        {
+          "text": "Recommends a high visibilityPriority for compose (and/or the badged inbox item).",
+          "passed": true,
+          "evidence": "DUO-05: '`.visibilityPriority(.high)` on the compose `ToolbarItem` (DUO-04) and on the badged Unread item (DUO-02).'"
+        },
+        {
+          "text": "Recommends giving icon-only items (compose) a title, e.g. Label or Button(_:systemImage:).",
+          "passed": true,
+          "evidence": "DUO-04: 'Compose gets a title', using `Button(\"New Message\", systemImage: \"square.and.pencil\")`. The reason given is overflow menu and VoiceOver."
+        },
+        {
+          "text": "States that axisBehavior (and toolbarVerticalEdge if mentioned) is absent from the installed 27.0 SDK / needs 27.1, while visibilityPriority, ToolbarOverflowMenu and badges work with the current SDK.",
+          "passed": true,
+          "evidence": "DUO-01 SDK line: '*blocked on iOS 27.1 SDK* (`axisBehavior` is not declared in the installed 27.0 SDK)'. DUO-02: badge 'available in the installed iOS 27.0 SDK'. DUO-03: '`ToolbarOverflowMenu` is iOS 27.0'. DUO-05: visibilityPriority 'available in the installed iOS 27.0 SDK (`@available(iOS 27.0, *)`)'. toolbarVerticalEdge is not mentioned in the response, which the assertion allows. Transcript step 10 lists it as absent."
+        },
+        {
+          "text": "The Select/Done recommendation cites Tech Talk 111462 at 8:00 (or 8:36); the badge recommendation cites 111462 9:00 (or 9:27).",
+          "passed": true,
+          "evidence": "DUO-01 Source: 'Raise the bar with iPhone Duo (Tech Talk 111462) 8:00 (sample at 8:36)'. DUO-02 Source: 'Tech Talk 111462 9:00 (badge sample at 9:27)'."
+        },
+        {
+          "text": "No file in the project copy was modified.",
+          "passed": true,
+          "evidence": "`diff -r` of R/project against the InboxToolbar fixture showed no differences, and changes.diff is 0 bytes. The scratch typecheck file was placed outside the project and removed (transcript steps 14-15)."
+        }
+      ],
+      "notes": [
+        "Deployment target unknown, so visibilityPriority/ToolbarOverflowMenu may need #available(iOS 27.0).",
+        "Whether Edit duplicates Select, and what tapping the badge should do.",
+        "Badge rendering in the bottom bar was only typechecked, not run.",
+        "No iPhone Duo simulator, so poses were not run."
+      ],
+      "eval_name": "toolbar-audit"
+    },
+    {
+      "eval_id": 5,
+      "configuration": "with_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 1.0,
+        "passed": 8,
+        "failed": 0,
+        "total": 8,
+        "time_seconds": 174.8,
+        "tokens": 51669,
+        "tool_calls": 0,
+        "errors": 0
+      },
+      "expectations": [
+        {
+          "text": "Proposes adapting the fixed 430pt column for the regular-width inner display using size classes or container width (not idiom or orientation).",
+          "passed": true,
+          "evidence": "DUO-02: 'Base the article width on the size class, not a fixed 430 pt', reading `horizontalSizeClass` with no cap on compact and a scaled cap on regular. Idiom and orientation are not used."
+        },
+        {
+          "text": "States that the continuously scrolling article content should not be displaced around the fold.",
+          "passed": true,
+          "evidence": "DUO-02: 'The talk says scrolling content like articles should flow, not move around the hinge (111463 2:26).' Kept as is: 'The article's `ScrollView` stays a single scrolling column that runs across the fold (111463 2:26).'"
+        },
+        {
+          "text": "Does not propose splitting or paginating the article into two pages at the crease.",
+          "passed": true,
+          "evidence": "DUO-02 'Not proposed: splitting the article into two \"book pages\" at the crease.' Transcript step 9 also records this rejection."
+        },
+        {
+          "text": "Proposes moving the floating Listen button off the fold using reservedRegions(kind: .division) (or ReservedRegion).",
+          "passed": true,
+          "evidence": "DUO-04: 'Move the button only when the fold is active, with `reservedRegions`': 'Read `reservedRegions(kind: .division)` from the `GeometryProxy` ... move the button into the trailing section.' A 27.0-compatible stand-in (DUO-03) is also offered."
+        },
+        {
+          "text": "States that reservedRegions is absent from the installed iOS 27.0 SDK and needs the iOS 27.1 SDK.",
+          "passed": true,
+          "evidence": "DUO-04 SDK: '*Blocked on the iOS 27.1 SDK*. `sdk_api_check.py` reports `reservedRegions`, `ReservedRegion` and `ArrangementView` absent from iOS 27.0.' The summary says the same."
+        },
+        {
+          "text": "Mentions that the fold's division region is inactive / zero width when the device is flat (or uses includeInactive deliberately).",
+          "passed": true,
+          "evidence": "This passes, but the wording is indirect. DUO-04: 'With a real query the button can stay centered when the phone is flat and move only when a division region (the fold) overlaps it', 'If an active region's `frame` overlaps', Verify 'P3 (centered when flat)', and the summary 'only when the fold is actually active'. It filters on active regions and ties flat to no displacement. It never literally says 'inactive' or 'zero width' when flat, and it does not mention includeInactive."
+        },
+        {
+          "text": "The no-displacement claim cites Tech Talk 111463 at 2:26 (or the fold-region claim cites 111463 7:50).",
+          "passed": true,
+          "evidence": "The no-displacement claim cites '111463 2:26' (DUO-02 and Kept as is). DUO-04 also cites '7:50 (division regions)'."
+        },
+        {
+          "text": "No file in the project copy was modified.",
+          "passed": true,
+          "evidence": "`diff -r` of R/project against the ReaderApp fixture showed no differences, and changes.diff is 0 bytes. The typecheck was piped via stdin (transcript step 10), so nothing was written."
+        }
+      ],
+      "notes": [
+        "Deployment target unknown (snippets assume iOS 17).",
+        "Exact region coordinate space/type to be confirmed once 27.1 SDK ships.",
+        "DUO-01 changes navigation structure to NavigationSplitView, which goes beyond the asked fixes and needs approval.",
+        "The size-class trailing-corner placement stands in for fold detection on 27.0."
+      ],
+      "eval_name": "centered-column-and-fold"
+    },
+    {
+      "eval_id": 6,
+      "configuration": "with_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 1.0,
+        "passed": 8,
+        "failed": 0,
+        "total": 8,
+        "time_seconds": 190.2,
+        "tokens": 54795,
+        "tool_calls": 0,
+        "errors": 0
+      },
+      "expectations": [
+        {
+          "text": "Recommends CameraCaptureAccessory added through the sceneAccessory modifier.",
+          "passed": true,
+          "evidence": "The response's short answer names the camera capture accessory. The DUO-05 sketch uses `.sceneAccessory { CameraCaptureAccessory(isEnabled: ...) { TeleprompterView(model: model) } ... }`."
+        },
+        {
+          "text": "Recommends registering the accessory on the camera view (CameraPreview/RecorderScreen), not at the app or NavigationStack root, so it only appears while the camera UI is visible.",
+          "passed": true,
+          "evidence": "DUO-05: 'attach `.sceneAccessory` to `CameraPreview` (not to `NavigationStack` or the app root)'. Availability section: 'attached to the same view as the camera UI. Here that's `CameraPreview` in `RecorderScreen`, so it disappears when that screen isn't visible.'"
+        },
+        {
+          "text": "States the accessory is only available when the app is full screen on the inner display with an active camera session.",
+          "passed": true,
+          "evidence": "'It is only available when all of these hold: ClipRecorder is **full screen on the inner display** ... A **camera session is active**.'"
+        },
+        {
+          "text": "Recommends observing availability (onAvailabilityChange) and disabling the Script toggle when unavailable.",
+          "passed": true,
+          "evidence": "The sketch includes `.onAvailabilityChange { model.isTeleprompterAvailable = $0 }` and a Toggle with `.disabled(!model.isTeleprompterAvailable)`. DUO-05 says to turn the empty 'Script' button into a toggle that is disabled while unavailable."
+        },
+        {
+          "text": "States that recording itself must not depend on the accessory being available.",
+          "passed": true,
+          "evidence": "'Recording never waits for the accessory. The Record button works the same whether the teleprompter is showing or not.' DUO-03: 'Don't make any of this depend on the teleprompter.' The sketch comment on RecordButton says '// never gated'."
+        },
+        {
+          "text": "Flags a camera-session prerequisite missing from the fixture: NSCameraUsageDescription / authorization request, the swallowed input error, or the missing movie output.",
+          "passed": true,
+          "evidence": "It flags all three. DUO-01 covers the missing `requestAccess` and `NSCameraUsageDescription`. DUO-02 covers `try? AVCaptureDeviceInput` swallowing errors. DUO-03 covers the missing `AVCaptureMovieFileOutput`."
+        },
+        {
+          "text": "States that CameraCaptureAccessory is absent from the installed 27.0 SDK and needs the iOS 27.1 SDK.",
+          "passed": true,
+          "evidence": "'**`CameraCaptureAccessory` is not in your SDK.** You have Xcode 27.0 ... with the iOS 27.0 SDK ... It was announced for iOS 27.1'. DUO-05: '***blocked on the iOS 27.1 SDK.*** `CameraCaptureAccessory` is missing from iOS 27.0.'"
+        },
+        {
+          "text": "No file in the project copy was modified.",
+          "passed": true,
+          "evidence": "`diff -r` of R/project against the ClipRecorder fixture showed no differences, and changes.diff is 0 bytes."
+        }
+      ],
+      "notes": [
+        "Whether accessory content can be touched is not stated in the talk (inference).",
+        "Whether recording exists elsewhere; deployment target; Info.plist contents.",
+        "Back-camera and outer-display orientation should be confirmed on a device.",
+        "No iPhone Duo simulator; P7, P8, P10 not run."
+      ],
+      "eval_name": "camera-teleprompter"
+    },
+    {
+      "eval_id": 1,
+      "configuration": "without_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 0.55,
+        "passed": 6,
+        "failed": 5,
+        "total": 11,
+        "time_seconds": 194.1,
+        "tokens": 40835,
+        "tool_calls": 0,
+        "errors": 1
+      },
+      "expectations": [
+        {
+          "text": "The response identifies the missing UIScene lifecycle (AppDelegate-only window) as the first/blocking item and says the app will not launch when built with the latest SDK.",
+          "passed": true,
+          "evidence": "response.md step '### 1. Move to the scene lifecycle (blocker, do first)': 'AppDelegate.swift:9 builds UIWindow(frame: UIScreen.main.bounds) in didFinishLaunching... Apps built with the iOS 27 SDK that don't use scenes fail to launch, so nothing else can be tested until this is done.'"
+        },
+        {
+          "text": "The response flags UIScreen.main.bounds / UIScreen.main.scale in LayoutHelpers or AppDelegate and names a replacement (view bounds, effective geometry, or traitCollection.displayScale).",
+          "passed": true,
+          "evidence": "Step 3: cardWidth() 'Base it on the container instead, for example min(container.bounds.width * 0.9, 600)'; 'hairline() (line 13): replace UIScreen.main.scale with traitCollection.displayScale'."
+        },
+        {
+          "text": "The response flags the userInterfaceIdiom and UIDevice orientation checks as layout decisions and proposes size classes or container size instead.",
+          "passed": true,
+          "evidence": "Step 3: 'The idiom there is .phone, so a card becomes 90% of a 7.6\" display... Base it on the container instead'; 'isLandscape (line 17) reads UIDevice.current.orientation... Delete it and use size classes.' Step 4 moves rowHeight to traitCollection.verticalSizeClass."
+        },
+        {
+          "text": "The response flags the standalone UIToolbar in EditorViewController as not participating in iPhone Duo vertical bars and proposes moving items into the navigation controller's toolbar.",
+          "passed": true,
+          "evidence": "Step 5: 'Replace the hand-placed UIToolbar with the navigation controller's toolbar: toolbarItems = [...] plus navigationController?.setToolbarHidden(false, animated:). Only the standard bars get the 27.1 vertical layout on the inner display.'"
+        },
+        {
+          "text": "The response flags the symmetric safe-area arithmetic (inset * 2) in EditorViewController as wrong for asymmetric insets.",
+          "passed": true,
+          "evidence": "Step 5: 'width = view.bounds.width - safeAreaInsets.left * 2 assumes the left and right insets are equal. On iPhone Duo they aren't'."
+        },
+        {
+          "text": "The response flags the custom ellipsis.circle bar item as conflicting with the system overflow menu (or proposes ToolbarOverflowMenu/additionalOverflowItems).",
+          "passed": false,
+          "evidence": "The ellipsis.circle item (EditorViewController.swift:17) is only mentioned in question 4 as having 'action: nil'. No mention of the system overflow menu, ToolbarOverflowMenu or additionalOverflowItems."
+        },
+        {
+          "text": "Recommendations carry stable item IDs, and the scene-lifecycle item cites WWDC26 'Modernize your UIKit app' (278) at 2:10 or the main-screen item cites 111461 3:57 / 278 2:51.",
+          "passed": false,
+          "evidence": "Items are only numbered steps 1-8 (no stable IDs). Sources list links to the 111461 tech talk page with no timestamps; session 278 is never cited; no 2:10, 3:57 or 2:51 appears."
+        },
+        {
+          "text": "The response reports the installed Xcode/SDK version (27.0) and separates items that compile on it from items blocked on the iOS 27.1 SDK.",
+          "passed": false,
+          "evidence": "Reports 'The only Xcode on this machine is 27.0' but never separates compile-today items from 27.1-blocked items; it instead asserts 'every API below exists on 17' and folds the 27.1-only UIViewReservedRegion suggestion into step 5 without marking it as blocked."
+        },
+        {
+          "text": "Upgrading to Xcode 27.1 is not sequenced as a prerequisite step before the fixes that work with the installed SDK (scene lifecycle, UIScreen.main, idiom/orientation, safe-area math).",
+          "passed": false,
+          "evidence": "'### 2. Move the toolchain to Xcode 27.1 / iOS 27.1 SDK' is placed before step 3 (UIScreen.main/idiom), step 4 (orientation row height) and step 5 (safe-area math)."
+        },
+        {
+          "text": "No Swift or plist file in the project copy was modified (changes.diff is empty).",
+          "passed": true,
+          "evidence": "outputs/changes.diff is 0 bytes; grader's `diff -r` of the LegacyNotes fixture against R/project reports no differences."
+        },
+        {
+          "text": "The response asks the developer which specific item IDs to apply.",
+          "passed": false,
+          "evidence": "The 'Questions for you' section asks about outer-display orientation, scope, other code and persistence; it never asks which items/IDs to apply."
+        }
+      ],
+      "notes": [
+        "Executor relied on web articles (9to5Mac, blakecrosley, dev.to) for SDK-tier details and noted Apple's 'Preparing your app for iPhone Duo' doc and Xcode 27.1 beta were not yet available.",
+        "No user_notes.md present; pasqualepillitteri.it fetch failed and was skipped."
+      ],
+      "eval_name": "full-readiness-plan"
+    },
+    {
+      "eval_id": 2,
+      "configuration": "without_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 0.5,
+        "passed": 3,
+        "failed": 3,
+        "total": 6,
+        "time_seconds": 100.4,
+        "tokens": 30128,
+        "tool_calls": 0,
+        "errors": 0
+      },
+      "expectations": [
+        {
+          "text": "The agent verified against the installed SDK (ran sdk_api_check.py, grepped the SDK, or compiled a probe) and reports Xcode/SDK 27.0.",
+          "passed": true,
+          "evidence": "Transcript steps 6-11: grepped SDK .swiftinterface/.h/.tbd files and typechecked stdin probes ('cannot find 'ArrangementView' in scope', 'has no member 'axisBehavior''). Response: 'Xcode 27.0 beta 6 (27A5252f)... Its only iOS SDK is iOS 27.0'."
+        },
+        {
+          "text": "The response states that ArrangementView and axisBehavior are not declared in the installed SDK and require the iOS 27.1 SDK.",
+          "passed": true,
+          "evidence": "'ArrangementView isn't public in that SDK... no .swiftinterface declares it'; 'axisBehavior isn't in the SDK at all'; 'These APIs come with a newer SDK (iOS 27.1).'"
+        },
+        {
+          "text": "No file in the project copy contains ArrangementView or axisBehavior after the run.",
+          "passed": true,
+          "evidence": "Grader ran `grep -rl 'ArrangementView\\|axisBehavior'` over R/project: no matches (exit 1). changes.diff empty; `diff -r` against fixture shows no differences."
+        },
+        {
+          "text": "The response explains that an #available check cannot make an undeclared symbol compile.",
+          "passed": false,
+          "evidence": "#available is never mentioned in response.md or transcript. The response explains the build would break but not why a runtime availability check does not help."
+        },
+        {
+          "text": "The response does not propose shipping guessed 27.1 API calls behind a compile-time guard (#if compiler, #if canImport, custom flag).",
+          "passed": false,
+          "evidence": "Option 2: 'Write it now for iOS 27.1, fenced off behind a compile-time check that the newer SwiftUI is present... the axisBehavior call would be a guess.' This is exactly the proposal the assertion forbids."
+        },
+        {
+          "text": "The response offers or applies at least one concrete change that compiles today (e.g. size-class driven layout for the player/queue, titles/symbols on bar items, visibilityPriority).",
+          "passed": false,
+          "evidence": "The three options are: install 27.1 Xcode, fence off unchecked code, or leave it. No compile-today change (size classes, visibilityPriority, labels) is offered."
+        }
+      ],
+      "notes": [],
+      "eval_name": "missing-27-1-sdk"
+    },
+    {
+      "eval_id": 3,
+      "configuration": "without_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 0.57,
+        "passed": 4,
+        "failed": 3,
+        "total": 7,
+        "time_seconds": 163.5,
+        "tokens": 36637,
+        "tool_calls": 0,
+        "errors": 0
+      },
+      "expectations": [
+        {
+          "text": "GalleryGrid no longer uses UIDevice.current.orientation or UIScreen.main; columns/size come from size classes or container geometry.",
+          "passed": true,
+          "evidence": "R/project/Sources/GalleryGrid.swift: `import UIKit` removed; columns from `.onGeometryChange(for: Int.self) { proxy in max(2, Int(proxy.size.width / Self.minimumTileWidth)) }`; tile height replaced by `.aspectRatio(1, contentMode: .fit)`."
+        },
+        {
+          "text": "GalleryGrid keeps 2 columns in iPhone portrait and 4 in iPhone landscape (no formula that can yield 3 on a small landscape iPhone).",
+          "passed": false,
+          "evidence": "Formula is `max(2, Int(width / 180))`, which yields 3 for any width in 540..<720 pt, e.g. a 667-pt landscape iPhone SE or a landscape iPhone whose safe-area-inset width falls below 720. It also yields more than 4 on wider containers. The response itself says 'Wider windows get more columns.'"
+        },
+        {
+          "text": "DockBleedModifier still distinguishes landscapeLeft from landscapeRight (not replaced with width > height or a size class).",
+          "passed": true,
+          "evidence": "R/project/Sources/DockBleedModifier.swift bleed(in:) still switches on `.landscapeLeft: (-geometry.safeAreaInsets.leading, 0)` and `.landscapeRight: (0, -geometry.safeAreaInsets.trailing)`."
+        },
+        {
+          "text": "DockBleedModifier is not restructured (no new UIViewRepresentable, KVO/observer or new data flow added); at most the deprecated scene.interfaceOrientation call is swapped for effectiveGeometry.interfaceOrientation.",
+          "passed": false,
+          "evidence": "changes.diff adds `@State private var interfaceOrientation`, a `private struct WindowSceneOrientationReader: UIViewRepresentable` with a ProbeView, `scene.observe(\\.effectiveGeometry, ...)` KVO observation and a `Task { @MainActor ... }` hop, plus `.background(WindowSceneOrientationReader(...))`."
+        },
+        {
+          "text": "The response explains that DockBleedModifier answers a physical question (which end has the cutout) that size classes cannot, referencing the code comment or AGENTS.md.",
+          "passed": true,
+          "evidence": "'AGENTS.md and the doc comment explain why the orientation is needed. In landscape, iOS reports the same inset on both sides, so the orientation is the only way to tell which end has the Dynamic Island. I didn't replace it with size classes or an aspect-ratio check.'"
+        },
+        {
+          "text": "The edited Swift files typecheck: the transcript shows swiftc -typecheck or a build succeeding after the edits.",
+          "passed": true,
+          "evidence": "Transcript steps 9-12: after edits, typecheck for iOS 17 and iOS 27 targets 'exit 0, no warnings'; final typecheck exit 0. Supporting evidence: grader ran `xcrun --sdk iphonesimulator swiftc -typecheck -target arm64-apple-ios18.0-simulator Sources/*.swift` on R/project, exit 0."
+        },
+        {
+          "text": "The replacement for the main-screen/orientation layout cites 111461 2:46 or 3:57, or WWDC26 278 2:51 or 6:50.",
+          "passed": false,
+          "evidence": "response.md cites no sessions or timestamps at all."
+        }
+      ],
+      "notes": [
+        "Executor did not know iPhone Duo's display/cutout layout and asked the user.",
+        "Linter and suppression format unknown, so no suppression added.",
+        "Column formula can produce 3 or more than 4 columns."
+      ],
+      "eval_name": "documented-orientation-exception"
+    },
+    {
+      "eval_id": 4,
+      "configuration": "without_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 0.75,
+        "passed": 6,
+        "failed": 2,
+        "total": 8,
+        "time_seconds": 192.9,
+        "tokens": 38788,
+        "tool_calls": 0,
+        "errors": 3
+      },
+      "expectations": [
+        {
+          "text": "Recommends keeping the Select/Done button horizontal (axisBehavior .horizontalOnly) because it switches between text labels.",
+          "passed": true,
+          "evidence": "Item 2: 'The text changes, so a single symbol can't represent it. Plan: Add .axisBehavior(.horizontalOnly) to this ToolbarItem.'"
+        },
+        {
+          "text": "Recommends replacing the envelope + '12 new' text with a symbol carrying a badge.",
+          "passed": true,
+          "evidence": "Item 4 Plan A (recommended): 'show the count as a badge on a symbol-only item... Button { } label: { Label(\"Unread\", systemImage: \"envelope\") }.badge(unreadCount)'."
+        },
+        {
+          "text": "Reserves the ellipsis symbol for the system overflow: the custom ellipsis filter Menu is either moved into ToolbarOverflowMenu or given its own filter symbol and title.",
+          "passed": true,
+          "evidence": "Item 3: 'Replace the item with ToolbarOverflowMenu { Button(\"Unread only\") {}; ... }', alternative 'Label(\"Filter\", systemImage: \"line.3.horizontal.decrease\")'; notes users would otherwise see two '...' menus."
+        },
+        {
+          "text": "Recommends a high visibilityPriority for compose (and/or the badged inbox item).",
+          "passed": true,
+          "evidence": "Item 5: 'Add .visibilityPriority(.high) so it's among the last items to overflow'; item 4 also adds .visibilityPriority(.high)."
+        },
+        {
+          "text": "Recommends giving icon-only items (compose) a title, e.g. Label or Button(_:systemImage:).",
+          "passed": true,
+          "evidence": "Item 5: 'Change the label to Label(\"New Message\", systemImage: \"square.and.pencil\")' because it 'shows up blank in overflow and VoiceOver'."
+        },
+        {
+          "text": "States that axisBehavior (and toolbarVerticalEdge if mentioned) is absent from the installed 27.0 SDK / needs 27.1, while visibilityPriority, ToolbarOverflowMenu and badges work with the current SDK.",
+          "passed": false,
+          "evidence": "Question 4 lumps them together: 'ToolbarOverflowMenu, visibilityPriority, axisBehavior, topBarPinnedTrailing and toolbarVerticalEdge are iOS 27 APIs.' The installed SDK was never checked and no 27.0 vs 27.1 distinction is made (transcript steps 11/13 even hit 404s for axisBehavior and toolbarVerticalEdge docs without drawing the conclusion)."
+        },
+        {
+          "text": "The Select/Done recommendation cites Tech Talk 111462 at 8:00 (or 8:36); the badge recommendation cites 111462 9:00 (or 9:27).",
+          "passed": false,
+          "evidence": "111462 is linked in Sources without any timestamp; no 8:00, 8:36, 9:00 or 9:27 appears."
+        },
+        {
+          "text": "No file in the project copy was modified.",
+          "passed": true,
+          "evidence": "changes.diff is 0 bytes; grader's `diff -r` of the InboxToolbar fixture against R/project reports no differences."
+        }
+      ],
+      "notes": [
+        "Docs JSON fetches for toolbarVerticalEdge, axisBehavior and toolbarVerticalCompressionBehavior returned 404; executor relied on the talk and third-party summaries."
+      ],
+      "eval_name": "toolbar-audit"
+    },
+    {
+      "eval_id": 5,
+      "configuration": "without_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 0.25,
+        "passed": 2,
+        "failed": 6,
+        "total": 8,
+        "time_seconds": 111.1,
+        "tokens": 28200,
+        "tool_calls": 0,
+        "errors": 0
+      },
+      "expectations": [
+        {
+          "text": "Proposes adapting the fixed 430pt column for the regular-width inner display using size classes or container width (not idiom or orientation).",
+          "passed": true,
+          "evidence": "Fix 1: 'Remove the fixed maxWidth: 430. Measure the container with onGeometryChange(for: CGFloat.self)... Choose the layout by measured width. Don't use UIDevice model checks'."
+        },
+        {
+          "text": "States that the continuously scrolling article content should not be displaced around the fold.",
+          "passed": false,
+          "evidence": "The response does the opposite: 'Wide (inner display): a two-page layout. Each half of the screen gets its own column, with a gutter down the middle... Reading then happens beside the fold, like a book.'"
+        },
+        {
+          "text": "Does not propose splitting or paginating the article into two pages at the crease.",
+          "passed": false,
+          "evidence": "Proposes a two-page layout split at the crease with a gutter, and 'Running body text across both columns needs manual pagination (splitting paragraphs by measured height, or a UITextView with two NSTextContainers)... I'd make it a follow-up.'"
+        },
+        {
+          "text": "Proposes moving the floating Listen button off the fold using reservedRegions(kind: .division) (or ReservedRegion).",
+          "passed": false,
+          "evidence": "No reservedRegions/ReservedRegion. It proposes safeAreaInset/side alignment against an assumed centred crease and states 'I couldn't find a public fold/hinge API'."
+        },
+        {
+          "text": "States that reservedRegions is absent from the installed iOS 27.0 SDK and needs the iOS 27.1 SDK.",
+          "passed": false,
+          "evidence": "reservedRegions and iOS 27.1 are never mentioned; the response only says no fold API exists in the 27.0 SDK and asks whether 'a newer beta' has one."
+        },
+        {
+          "text": "Mentions that the fold's division region is inactive / zero width when the device is flat (or uses includeInactive deliberately).",
+          "passed": false,
+          "evidence": "Not mentioned. The plan applies a permanent symmetric crease gutter on the wide display regardless of posture and says it 'doesn't... detect when the phone is half-folded'."
+        },
+        {
+          "text": "The no-displacement claim cites Tech Talk 111463 at 2:26 (or the fold-region claim cites 111463 7:50).",
+          "passed": false,
+          "evidence": "No session numbers or timestamps cited anywhere in response.md."
+        },
+        {
+          "text": "No file in the project copy was modified.",
+          "passed": true,
+          "evidence": "changes.diff is 0 bytes; grader's `diff -r` of the ReaderApp fixture against R/project reports no differences."
+        }
+      ],
+      "notes": [
+        "Crease orientation, position and width assumed (vertical, centred, 24-32 pt).",
+        "Size class reported by the inner display unknown to executor.",
+        "Two-page layout proposal contradicts Apple guidance that scrolling content should not be displaced around the fold.",
+        "Invented a FoldLayout abstraction with an assumed centred crease in place of a real fold API."
+      ],
+      "eval_name": "centered-column-and-fold"
+    },
+    {
+      "eval_id": 6,
+      "configuration": "without_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 0.75,
+        "passed": 6,
+        "failed": 2,
+        "total": 8,
+        "time_seconds": 155.0,
+        "tokens": 34831,
+        "tool_calls": 0,
+        "errors": 0
+      },
+      "expectations": [
+        {
+          "text": "Recommends CameraCaptureAccessory added through the sceneAccessory modifier.",
+          "passed": true,
+          "evidence": "'.sceneAccessory { CameraCaptureAccessory(isEnabled: $model.teleprompterEnabled) { TeleprompterView(model: model) }.onAvailabilityChange { ... } }'."
+        },
+        {
+          "text": "Recommends registering the accessory on the camera view (CameraPreview/RecorderScreen), not at the app or NavigationStack root, so it only appears while the camera UI is visible.",
+          "passed": true,
+          "evidence": "Section 3 'RecorderScreen': 'Attach .sceneAccessory { CameraCaptureAccessory(...) ... } to CameraPreview.' (The rationale about visibility is not stated, but the placement is correct.)"
+        },
+        {
+          "text": "States the accessory is only available when the app is full screen on the inner display with an active camera session.",
+          "passed": true,
+          "evidence": "'It only works under two conditions: your app is full screen on the inner display, and a camera session is running.'"
+        },
+        {
+          "text": "Recommends observing availability (onAvailabilityChange) and disabling the Script toggle when unavailable.",
+          "passed": true,
+          "evidence": "'Turn the empty \"Script\" button into a toggle bound to teleprompterEnabled, with .disabled(!model.teleprompterAvailable)' fed by onAvailabilityChange."
+        },
+        {
+          "text": "States that recording itself must not depend on the accessory being available.",
+          "passed": false,
+          "evidence": "Never stated explicitly. The closest lines are the reverse dependency ('The teleprompter doesn't depend on that [movie output]') and 'The toggle just stays disabled and the rest of the app behaves as it does now', which implies but does not state the design rule for recording."
+        },
+        {
+          "text": "Flags a camera-session prerequisite missing from the fixture: NSCameraUsageDescription / authorization request, the swallowed input error, or the missing movie output.",
+          "passed": true,
+          "evidence": "'start() never asks for camera permission, and it silently skips adding the input if that fails... request AVCaptureDevice.requestAccess(for: .video) first'; also 'there's no AVCaptureMovieFileOutput or microphone input'."
+        },
+        {
+          "text": "States that CameraCaptureAccessory is absent from the installed 27.0 SDK and needs the iOS 27.1 SDK.",
+          "passed": false,
+          "evidence": "Says 'It needs Xcode 27.1 or later with the iOS 27 SDK (27.1 is recommended)' and 'I haven't confirmed the exact iOS version these APIs require; check the SDK header.' The installed SDK was never checked and absence from 27.0 is not stated; '27.1 recommended' implies 27.0 could work."
+        },
+        {
+          "text": "No file in the project copy was modified.",
+          "passed": true,
+          "evidence": "changes.diff is 0 bytes; grader's `diff -r` of the ClipRecorder fixture against R/project reports no differences."
+        }
+      ],
+      "notes": [
+        "Exact iOS version required for the accessory APIs not confirmed.",
+        "Conflicting third-party report on whether third-party apps get the camera accessory."
+      ],
+      "eval_name": "camera-teleprompter"
+    }
+  ],
+  "run_summary": {
+    "with_skill": {
+      "pass_rate": {
+        "mean": 1.0,
+        "stddev": 0.0,
+        "min": 1.0,
+        "max": 1.0
+      },
+      "time_seconds": {
+        "mean": 250.2833,
+        "stddev": 112.5269,
+        "min": 167.0,
+        "max": 398.9
+      },
+      "tokens": {
+        "mean": 62024.0,
+        "stddev": 16822.7575,
+        "min": 51669,
+        "max": 95749
+      }
+    },
+    "without_skill": {
+      "pass_rate": {
+        "mean": 0.5617,
+        "stddev": 0.1855,
+        "min": 0.25,
+        "max": 0.75
+      },
+      "time_seconds": {
+        "mean": 152.8333,
+        "stddev": 39.7937,
+        "min": 100.4,
+        "max": 194.1
+      },
+      "tokens": {
+        "mean": 34903.1667,
+        "stddev": 4919.8501,
+        "min": 28200,
+        "max": 40835
+      }
+    },
+    "delta": {
+      "pass_rate": "+0.44",
+      "time_seconds": "+97.4",
+      "tokens": "+27121"
+    }
+  },
+  "notes": [
+    "Iteration 2 used stricter assertions (pinned session timestamps, SDK separation, no guessed code behind compile-time guards, preserved behavior, typecheck evidence). The no-skill baseline outputs were reused from iteration 1 and regraded, so the baseline drop from 70% to 56% reflects the stricter rubric, not new runs.",
+    "With the skill every assertion passed in all six evals (51/51); the iteration-1 failure (eval 4, overflow menu) is resolved by the refined bars guidance that allows a named Filter menu with its own symbol.",
+    "Most discriminating assertions: SDK separation / 27.1 availability (fails in 5 of 6 baselines), pinned session timestamps (fails in all baselines), and 'do not ship guessed 27.1 calls behind compile-time guards' (baseline eval 2).",
+    "Eval 5 remains the largest gap (8/8 vs 2/8): the baseline paginates the article at the crease and never checks reserved-region availability.",
+    "Cost: the skill adds about 97 s and 27k tokens per task on average; eval 1 (full readiness plan) and eval 3 (edits + typecheck + rescan) are the slowest at roughly 6.5 minutes each.",
+    "Process issue found by the run, not by any assertion: eval 3's executor ran `xcrun agent skills export` without --output-dir inside the plugin folder; the skill text now shows the temporary-directory command.",
+    "Grader-flagged soft spots: eval 5's 'inactive division region' pass relied on paraphrase; eval 2 offered rather than applied the compiling alternative. Single run per configuration, so variance is not measured."
+  ]
+}

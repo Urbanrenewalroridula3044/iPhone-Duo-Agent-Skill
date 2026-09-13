@@ -1,0 +1,23 @@
+{
+  "skill_name": "iphone-duo-adaptivity-audit",
+  "evals": [
+    {
+      "id": 1,
+      "name": "documented-orientation-exception",
+      "prompt": "Our lint flagged interfaceOrientation and UIScreen.main in evals/files/FloatingDock. Clean up all the orientation and screen stuff in that folder so it's iPhone Duo safe.",
+      "expected_output": "GalleryGrid's device-orientation and screen-width layout is replaced with size classes or container geometry, while DockBleedModifier's documented physical orientation read is kept (optionally moved to effectiveGeometry and the view's own scene) rather than replaced with an aspect-ratio check.",
+      "files": [
+        "evals/files/FloatingDock"
+      ],
+      "expectations": [
+        "GalleryGrid no longer uses UIDevice.current.orientation or UIScreen.main; columns/size come from size classes or container geometry.",
+        "GalleryGrid keeps 2 columns in iPhone portrait and 4 in iPhone landscape (no formula that can yield 3 on a small landscape iPhone).",
+        "DockBleedModifier still distinguishes landscapeLeft from landscapeRight (not replaced with width > height or a size class).",
+        "DockBleedModifier is not restructured (no new UIViewRepresentable, KVO/observer or new data flow added); at most the deprecated scene.interfaceOrientation call is swapped for effectiveGeometry.interfaceOrientation.",
+        "The response explains that DockBleedModifier answers a physical question (which end has the cutout) that size classes cannot, referencing the code comment or AGENTS.md.",
+        "The edited Swift files typecheck: the transcript shows swiftc -typecheck or a build succeeding after the edits.",
+        "The replacement for the main-screen/orientation layout cites 111461 2:46 or 3:57, or WWDC26 278 2:51 or 6:50."
+      ]
+    }
+  ]
+}

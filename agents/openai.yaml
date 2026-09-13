@@ -1,0 +1,23 @@
+name: iphone-duo-skills
+version: "1.0.0"
+description: >-
+  Audit, plan and adapt SwiftUI and UIKit apps for iPhone Duo with a read-only
+  scanner, SDK availability checks and approval-gated changes.
+author:
+  name: Aleksei Kakoulin
+  email: alexey1312ru@gmail.com
+repository: https://github.com/alexey1312/iPhone-Duo-Agent-Skill
+license: MIT
+logo: assets/logo.svg
+keywords:
+  - iphone-duo
+  - foldable
+  - ios
+  - swiftui
+  - uikit
+skills:
+  - iphone-duo-readiness
+  - iphone-duo-adaptivity-audit
+  - iphone-duo-bars
+  - iphone-duo-layout
+  - iphone-duo-displays

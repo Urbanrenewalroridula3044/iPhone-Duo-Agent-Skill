@@ -1,0 +1,82 @@
+[
+  {
+    "query": "there are like 80 UIScreen.main references in our UIKit codebase and the 27 SDK marks it deprecated. replace them properly (scale vs bounds cases differ)",
+    "should_trigger": true
+  },
+  {
+    "query": "our app still uses AppDelegate.window and the iOS 27 SDK build launches to a black screen. migrate us to scene lifecycle without breaking deep links",
+    "should_trigger": true
+  },
+  {
+    "query": "we branch layouts on `traitCollection.userInterfaceIdiom == .pad`. an iPhone-only app on iPad is now resizable in 27 \u2014 what should that code become?",
+    "should_trigger": true
+  },
+  {
+    "query": "UIDevice.current.orientation.isLandscape drives our photo grid column count and it's wrong in iPhone Mirroring on the Mac. fix it",
+    "should_trigger": true
+  },
+  {
+    "query": "is UIRequiresFullScreen still a thing on iOS 27? our non-game app sets it to avoid resizing",
+    "should_trigger": true
+  },
+  {
+    "query": "lint flagged windowScene.interfaceOrientation as deprecated in Sources/Player/FullscreenController.swift \u2014 what's the replacement and is size class enough?",
+    "should_trigger": true
+  },
+  {
+    "query": "clean up UIApplication.shared.keyWindow and connectedScenes.first usages, we want to support multiple windows",
+    "should_trigger": true
+  },
+  {
+    "query": "our SwiftUI views use UIScreen.main.bounds.width for card widths, looks broken on the foldable inner display",
+    "should_trigger": true
+  },
+  {
+    "query": "audit Sources/ for orientation/idiom/screen assumptions that break in resizable environments and give me file:line findings",
+    "should_trigger": true
+  },
+  {
+    "query": "my SwiftUI List jumps to the top every time I pop back from the detail view, NavigationStack with a path binding, iOS 27. how do i keep the scroll position",
+    "should_trigger": false
+  },
+  {
+    "query": "Android team asked whether Jetpack WindowManager FoldingFeature has an iOS equivalent\u2026 for now just help me wire up WindowInfoTracker in our Kotlin MainActivity",
+    "should_trigger": false
+  },
+  {
+    "query": "Xcode 27 beta keeps eating disk, DerivedData is 60GB and there are 4 simulator runtimes. what can i safely delete",
+    "should_trigger": false
+  },
+  {
+    "query": "how do I lock my game to landscape on iPhone only, SpriteKit, iOS 18 deployment target",
+    "should_trigger": false
+  },
+  {
+    "query": "UIScreen brightness: how do I set screen brightness to max while showing a QR code",
+    "should_trigger": false
+  },
+  {
+    "query": "Toolbar buttons are ending up in the overflow menu on the iPhone Duo inner display, how do I control which ones stay visible",
+    "should_trigger": false
+  },
+  {
+    "query": "use onHingeChange to animate a page curl when the phone is half folded",
+    "should_trigger": false
+  },
+  {
+    "query": "our AppDelegate push notification token registration stopped working after Xcode 27, didRegisterForRemoteNotifications never called",
+    "should_trigger": false
+  },
+  {
+    "query": "implement CoreMotion based step counting with CMPedometer",
+    "should_trigger": false
+  },
+  {
+    "query": "Explain the difference between @State and @Observable for a view model",
+    "should_trigger": false
+  },
+  {
+    "query": "Swift 6 strict concurrency errors in our AppDelegate: 'main actor-isolated property window can not be referenced'",
+    "should_trigger": false
+  }
+]

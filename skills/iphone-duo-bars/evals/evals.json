@@ -1,0 +1,24 @@
+{
+  "skill_name": "iphone-duo-bars",
+  "evals": [
+    {
+      "id": 1,
+      "name": "toolbar-audit",
+      "prompt": "Look at evals/files/InboxToolbar/Inbox/InboxScreen.swift. What should we change so the toolbar works well with the vertical bars on iPhone Duo? Give me a plan per item, don't edit yet.",
+      "expected_output": "A per-item plan: Select/Done horizontal-only, envelope + '12 new' becomes a badged symbol, ellipsis filter menu consolidated into ToolbarOverflowMenu, high visibility priority for compose and the badged inbox item, titles on every item, SDK availability noted.",
+      "files": [
+        "evals/files/InboxToolbar"
+      ],
+      "expectations": [
+        "Recommends keeping the Select/Done button horizontal (axisBehavior .horizontalOnly) because it switches between text labels.",
+        "Recommends replacing the envelope + '12 new' text with a symbol carrying a badge.",
+        "Reserves the ellipsis symbol for the system overflow: the custom ellipsis filter Menu is either moved into ToolbarOverflowMenu or given its own filter symbol and title.",
+        "Recommends a high visibilityPriority for compose (and/or the badged inbox item).",
+        "Recommends giving icon-only items (compose) a title, e.g. Label or Button(_:systemImage:).",
+        "States that axisBehavior (and toolbarVerticalEdge if mentioned) is absent from the installed 27.0 SDK / needs 27.1, while visibilityPriority, ToolbarOverflowMenu and badges work with the current SDK.",
+        "The Select/Done recommendation cites Tech Talk 111462 at 8:00 (or 8:36); the badge recommendation cites 111462 9:00 (or 9:27).",
+        "No file in the project copy was modified."
+      ]
+    }
+  ]
+}

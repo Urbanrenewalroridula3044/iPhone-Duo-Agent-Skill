@@ -1,0 +1,24 @@
+{
+  "skill_name": "iphone-duo-layout",
+  "evals": [
+    {
+      "id": 1,
+      "name": "centered-column-and-fold",
+      "prompt": "evals/files/ReaderApp: on the iPhone Duo inner display the article is a skinny column in the middle, and when you half-fold the phone the Listen button sits right on the crease. Propose fixes (plan only).",
+      "expected_output": "Size-class driven reading layout for the regular width, the scrolling article not displaced around the fold, the floating Listen button displaced using a division reserved region, 27.1 availability noted.",
+      "files": [
+        "evals/files/ReaderApp"
+      ],
+      "expectations": [
+        "Proposes adapting the fixed 430pt column for the regular-width inner display using size classes or container width (not idiom or orientation).",
+        "States that the continuously scrolling article content should not be displaced around the fold.",
+        "Does not propose splitting or paginating the article into two pages at the crease.",
+        "Proposes moving the floating Listen button off the fold using reservedRegions(kind: .division) (or ReservedRegion).",
+        "States that reservedRegions is absent from the installed iOS 27.0 SDK and needs the iOS 27.1 SDK.",
+        "Mentions that the fold's division region is inactive / zero width when the device is flat (or uses includeInactive deliberately).",
+        "The no-displacement claim cites Tech Talk 111463 at 2:26 (or the fold-region claim cites 111463 7:50).",
+        "No file in the project copy was modified."
+      ]
+    }
+  ]
+}

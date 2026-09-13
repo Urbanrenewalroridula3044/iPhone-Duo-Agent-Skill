@@ -1,0 +1,16 @@
+{
+  "name": "iphone-duo-agent-skill",
+  "private": true,
+  "description": "Agent Skills for preparing SwiftUI and UIKit apps for iPhone Duo.",
+  "license": "MIT",
+  "keywords": ["pi-package", "agent-skill", "iphone-duo", "ios"],
+  "pi": {
+    "skills": [
+      "./skills/iphone-duo-readiness",
+      "./skills/iphone-duo-adaptivity-audit",
+      "./skills/iphone-duo-bars",
+      "./skills/iphone-duo-layout",
+      "./skills/iphone-duo-displays"
+    ]
+  }
+}

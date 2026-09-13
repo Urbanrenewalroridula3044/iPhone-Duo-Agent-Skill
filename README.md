@@ -111,29 +111,6 @@ Start with `iphone-duo-readiness` for a whole app; call a specialist directly fo
 focused question. Every skill carries its own copy of the shared references and scripts,
 so any subset installs cleanly.
 
-## Evaluated with skill-creator
-
-The skills were developed and measured with Anthropic's
-[skill-creator](https://github.com/anthropics/claude-plugins-official/tree/main/plugins/skill-creator):
-six realistic tasks on fixture projects, each run with and without the skills, scored by separate
-grader agents against explicit expectations.
-
-| Eval | With skills | Without skills |
-| --- | --- | --- |
-| Full readiness plan for a legacy UIKit app | 11/11 | 6/11 |
-| "Just do it" with APIs the installed SDK lacks | 6/6 | 3/6 |
-| Orientation cleanup around a documented exception | 7/7 | 4/7 |
-| Toolbar audit for vertical bars | 8/8 | 6/8 |
-| Centered column and a button on the fold | 8/8 | 2/8 |
-| Teleprompter on the outer display | 8/8 | 6/8 |
-| **Pass rate** | **100%** | **56%** |
-
-The baseline agent searched the web and found Apple's talks on its own; what it missed
-was the workflow — checking the SDK, separating what compiles today from what waits for
-iOS 27.1, citing sessions, respecting documented decisions and asking before editing.
-Trigger accuracy was tuned on 20 queries per skill. Details, costs and caveats:
-[benchmarks/2026-09-13](benchmarks/2026-09-13/README.md).
-
 ## How to Use These Skills
 
 ### Option A: Using skills.sh

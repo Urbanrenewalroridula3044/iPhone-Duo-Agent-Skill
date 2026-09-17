@@ -21,7 +21,7 @@ SDK can actually compile, propose a tiered plan where every item cites the sessi
 timestamp (or documentation section) it comes from, and change code only after you
 approve it.
 
-**Website:** [blog.kakoulin.com/apps/iphone-duo-agent-skills](https://blog.kakoulin.com/apps/iphone-duo-agent-skills)
+**Website:** <https://blog.kakoulin.com/apps/iphone-duo-agent-skills>
 
 ## Who this is for
 

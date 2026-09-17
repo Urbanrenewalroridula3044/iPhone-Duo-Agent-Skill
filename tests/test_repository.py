@@ -88,7 +88,8 @@ class SkillTests(unittest.TestCase):
         pattern = re.compile(r"\biphone-duo-[a-z-]+[a-z]\b")
         plugin = json.loads((ROOT / ".claude-plugin/plugin.json").read_text(encoding="utf-8"))["name"]
         for path in [*(ROOT / "skills").rglob("*.md"), ROOT / "README.md", ROOT / "AGENTS.md", ROOT / "scripts/duo_scan.py"]:
-            for name in set(pattern.findall(path.read_text(encoding="utf-8"))) - {plugin}:
+            text = re.sub(r"https?://\S+", "", path.read_text(encoding="utf-8"))
+            for name in set(pattern.findall(text)) - {plugin}:
                 with self.subTest(file=str(path.relative_to(ROOT)), name=name):
                     self.assertIn(name, SKILLS)
 

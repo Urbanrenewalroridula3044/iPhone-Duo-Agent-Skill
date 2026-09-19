@@ -85,6 +85,30 @@ than taken on trust:
 | `safeAreaInsets` | top **0**, leading **0**, bottom **34**, trailing **84** |
 | `horizontalSizeClass` / `verticalSizeClass` | compact / regular |
 | `verticalBarEdge` | `.trailing` |
+| `reservedRegions(kind: .division)` | none — the device is closed |
+| `reservedRegions(kind: .occlusion)` | **two**: a 37 × 37 camera hole at (399.7, 29.3) and an 84 × 170 strip at (382, 0) for the status bar and Dynamic Island |
+
+Three things about reserved regions that only a booted device settles, and that an
+earlier run of the probe got wrong by sampling `onAppear`:
+
+- **They arrive a few layout passes late.**
+  A reader is empty for its own first three layout passes and populated on its fourth,
+  about 9 ms after the first.
+  SwiftUI re-lays out on its own when they appear, so nothing needs observing —
+  but a probe that reads them once, on appear, reports an empty list
+  and concludes the display reserves nothing.
+- **The list can hold more than the thing you want.** Only the camera hole is a lens;
+  the 84 × 170 strip is the bar area. Order is undocumented, so `.first` is luck. Pick
+  by a property that means something — area separates a lens from a strip that spans
+  an edge.
+- **Frames are in the querying proxy's own coordinate space**, not the display's. A
+  second `GeometryReader` inset 50 pt inside the first reports every frame shifted by
+  exactly (−50, −50), and regions outside the proxy come back with negative
+  coordinates rather than clipped.
+  Converting to a container that includes the safe area should then be an offset by
+  the leading and top insets — but that one is an inference, not a measurement:
+  both insets are 0 on this display, so the probe could not tell it apart
+  from no offset at all.
 
 This is the asymmetry the talks describe, with numbers:
 **84 pt on the trailing edge against 0 on the leading edge, and 0 on top.**

